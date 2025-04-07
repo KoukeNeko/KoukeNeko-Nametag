@@ -19,7 +19,6 @@ public final class KoukeNekoNametag extends JavaPlugin {
         if (provider != null) {
             LuckPerms api = provider.getProvider();
             getLogger().info("LuckPerms API 已成功註冊");
-            //info
             getLogger().info("LuckPerms API 版本: " + api.getPluginMetadata().getApiVersion());
         }
 
