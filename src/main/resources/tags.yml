@@ -1,0 +1,29 @@
+# KoukeNeko 標籤系統 - 標籤配置文件
+
+# 標籤定義
+tags:
+  # 範例標籤格式：
+  # 標籤ID:
+  #   display: 顯示格式 (支援顏色代碼 &)
+  #   
+  # 權限節點自動生成為 koukeneko.tags.<標籤ID>
+  
+  # 普通會員標籤
+  member:
+    display: "&7[&a會員&7]&f"
+  
+  # VIP標籤
+  vip:
+    display: "&7[&6VIP&7]&f"
+  
+  # 管理員標籤
+  admin:
+    display: "&7[&c管理員&7]&f"
+  
+  # BETA測試者標籤
+  beta:
+    display: "&7[&bBeta&7]&f"
+  
+  # 贊助者標籤
+  donator:
+    display: "&7[&d贊助者&7]&f"
