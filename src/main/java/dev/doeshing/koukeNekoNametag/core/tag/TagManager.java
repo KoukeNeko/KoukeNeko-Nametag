@@ -169,6 +169,9 @@ public class TagManager {
             return false;
         }
         
+        // 先移除現有標籤
+        removeActiveTag(player);
+        
         // 執行設置標籤的指令
         List<String> commands = plugin.getConfig().getStringList("command.settag");
         for (String cmd : commands) {

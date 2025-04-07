@@ -52,6 +52,11 @@ public class TagCommand implements CommandExecutor, TabCompleter {
             return handleCreateCommand(sender, args);
         }
         
+        // 處理 /tag remove <標籤ID> 命令
+        if (args[0].equalsIgnoreCase("remove")) {
+            return handleRemoveTagCommand(sender, args);
+        }
+        
         // 處理 /tag <玩家名稱> add|remove <標籤ID> 格式的命令
         Player targetPlayer = Bukkit.getPlayer(args[0]);
         if (targetPlayer == null) {
@@ -114,12 +119,66 @@ public class TagCommand implements CommandExecutor, TabCompleter {
         String display = args[2];
         
         if (tagManager.getTag(tagId) != null) {
-            plugin.getMessageManager().sendMessage(sender, "&c標籤ID '" + tagId + "' A already exists!");
+            plugin.getMessageManager().sendMessage(sender, "&c標籤ID '" + tagId + "' 已存在!");
             return true;
         }
         
         Tag tag = tagManager.createTag(tagId, display);
         plugin.getMessageManager().sendMessage(sender, "&a已創建標籤: " + tag.getDisplay() + " &7(ID: &f" + tag.getId() + "&7)");
+        
+        return true;
+    }
+    
+    /**
+     * 處理刪除標籤的命令
+     */
+    private boolean handleRemoveTagCommand(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            plugin.getMessageManager().sendMessage(sender, "&c用法: /tag remove <標籤ID>");
+            return true;
+        }
+        
+        String tagId = args[1];
+        Tag tag = tagManager.getTag(tagId);
+        
+        if (tag == null) {
+            plugin.getMessageManager().sendMessage(sender, "&c標籤 '" + tagId + "' 不存在!");
+            return true;
+        }
+        
+        // 找出所有在線且擁有此標籤權限的玩家
+        int affectedPlayers = 0;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.hasPermission(tag.getPermission())) {
+                // 移除玩家的標籤權限
+                tagManager.removeTagPermission(player, tag);
+                
+                // 如果玩家正在使用此標籤，也移除前綴
+                tagManager.removeActiveTag(player);
+                
+                plugin.getMessageManager().sendMessage(player, "&c你正在使用的標籤 " + tag.getDisplay() + " &c已被管理員刪除");
+                affectedPlayers++;
+            }
+        }
+        
+        // 對離線玩家，利用LuckPerms API移除權限
+        List<String> commands = plugin.getConfig().getStringList("command.remove_permission_all");
+        for (String cmd : commands) {
+            cmd = cmd.replace("{tag}", tag.getPermission())
+                   .replace("{display}", tag.getDisplay());
+            plugin.getLogger().info("執行移除所有玩家標籤權限命令: " + cmd);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+        }
+        
+        // 刪除標籤
+        if (tagManager.deleteTag(tagId)) {
+            plugin.getMessageManager().sendMessage(sender, "&a已刪除標籤: " + tag.getDisplay() + " &7(ID: &f" + tagId + "&7)");
+            if (affectedPlayers > 0) {
+                plugin.getMessageManager().sendMessage(sender, "&e共有 " + affectedPlayers + " 位玩家的標籤權限被移除");
+            }
+        } else {
+            plugin.getMessageManager().sendMessage(sender, "&c刪除標籤時發生錯誤!");
+        }
         
         return true;
     }
@@ -142,9 +201,12 @@ public class TagCommand implements CommandExecutor, TabCompleter {
         }
         
         if (args.length == 1) {
-            // 第一個參數：create 或玩家名稱
+            // 第一個參數：create, remove 或玩家名稱
             if ("create".startsWith(args[0].toLowerCase())) {
                 completions.add("create");
+            }
+            if ("remove".startsWith(args[0].toLowerCase())) {
+                completions.add("remove");
             }
             
             // 加上線上玩家
@@ -160,6 +222,16 @@ public class TagCommand implements CommandExecutor, TabCompleter {
         if (args.length == 2) {
             if (args[0].equalsIgnoreCase("create")) {
                 // create 後面的是標籤ID，沒有提示
+                return completions;
+            }
+            
+            if (args[0].equalsIgnoreCase("remove")) {
+                // remove 後面的是標籤ID
+                for (Tag tag : tagManager.getAllTags()) {
+                    if (tag.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
+                        completions.add(tag.getId());
+                    }
+                }
                 return completions;
             }
             

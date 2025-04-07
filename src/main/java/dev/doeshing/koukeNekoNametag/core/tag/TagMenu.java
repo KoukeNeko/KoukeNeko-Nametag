@@ -32,7 +32,7 @@ public class TagMenu implements Listener {
     }
 
     /**
-     * 為玩家打開標籤選擇菜單
+     * 為玩家打開標籤選擇選單
      */
     public void openMenu(Player player) {
         // 獲取玩家可用的標籤
@@ -53,7 +53,7 @@ public class TagMenu implements Listener {
         // 添加移除標籤的選項
         ItemStack removeItem = new ItemStack(Material.BARRIER);
         ItemMeta removeMeta = removeItem.getItemMeta();
-        removeMeta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize("&c移除當前標籤"));
+        removeMeta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize("&c移除目前標籤"));
         removeItem.setItemMeta(removeMeta);
         menu.setItem(rows * 9 - 1, removeItem);
 
@@ -82,7 +82,11 @@ public class TagMenu implements Listener {
             List<Component> lore = new ArrayList<>();
             lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize("&7點擊選擇此標籤"));
             lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize("&7ID: &f" + tag.getId()));
-            lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize("&7權限: &f" + tag.getPermission()));
+
+            // 檢查管理員權限
+            if (player.hasPermission("koukeneko.admin")) {
+                lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize("&7權限: &f" + tag.getPermission()));
+            }
             
             meta.lore(lore);
             item.setItemMeta(meta);
@@ -134,16 +138,16 @@ public class TagMenu implements Listener {
         
         // 設置活躍標籤
         if (tagManager.setActiveTag(player, selectedTag)) {
-            plugin.getMessageManager().sendMessage(player, "&a已設置標籤: " + selectedTag.getDisplay());
+            plugin.getMessageManager().sendMessage(player, "&a已設定標籤: " + selectedTag.getDisplay());
         } else {
-            plugin.getMessageManager().sendMessage(player, "&c無法設置標籤!");
+            plugin.getMessageManager().sendMessage(player, "&c無法設定標籤!");
         }
         
         player.closeInventory();
     }
 
     /**
-     * 處理菜單關閉事件
+     * 處理選單關閉事件
      */
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {

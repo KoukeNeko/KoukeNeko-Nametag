@@ -8,7 +8,7 @@ public class Tag {
     private final String display;     // 顯示格式 (例如 "&7[&bBeta&7]&f")
 
     /**
-     * 創建一個新的標籤
+     * 建立一個新的標籤
      * 
      * @param id 標籤ID
      * @param display 顯示格式
