@@ -1,7 +1,10 @@
 package dev.doeshing.koukeNekoNametag;
 
 import dev.doeshing.koukeNekoNametag.core.MessageManager;
+import net.luckperms.api.LuckPerms;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class KoukeNekoNametag extends JavaPlugin {
@@ -11,6 +14,14 @@ public final class KoukeNekoNametag extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+
+        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+        if (provider != null) {
+            LuckPerms api = provider.getProvider();
+            getLogger().info("LuckPerms API 已成功註冊");
+            //info
+            getLogger().info("LuckPerms API 版本: " + api.getPluginMetadata().getApiVersion());
+        }
 
     }
 
