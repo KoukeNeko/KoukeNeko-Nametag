@@ -157,7 +157,7 @@ public class TagCommand implements CommandExecutor, TabCompleter {
 //                tagManager.removeActiveTag(player);
                 // 傳送通知給玩家哪個標籤已在系統中被移除，但仍然可以使用到想變更前
                 
-                plugin.getMessageManager().sendMessage(player, "&c你正在使用的標籤 " + tag.getDisplay() + " &c已在系統中被移除刪除，你仍然可以保留標籤狀態");
+                plugin.getMessageManager().sendMessage(player, "&c你所擁有的標籤 " + tag.getDisplay() + " &c已在系統中被移除刪除，你仍然可以保留標籤狀態");
                 affectedPlayers++;
             }
         }
