@@ -1,6 +1,7 @@
 package dev.doeshing.koukeNekoNametag.commands;
 
 import dev.doeshing.koukeNekoNametag.KoukeNekoNametag;
+import dev.doeshing.koukeNekoNametag.core.lang.LanguageManager;
 import dev.doeshing.koukeNekoNametag.core.tag.Tag;
 import dev.doeshing.koukeNekoNametag.core.tag.TagManager;
 import dev.doeshing.koukeNekoNametag.core.tag.TagMenu;
@@ -13,7 +14,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TagCommand implements CommandExecutor, TabCompleter {
 
@@ -29,10 +32,10 @@ public class TagCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        // 只有 /tag 指令時，打開選擇菜單（只有玩家可以使用）
+        // 只有 /tag 指令時，打開選擇選單（只有玩家可以使用）
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
-                plugin.getMessageManager().sendMessage(sender, "&c此指令只能由玩家使用！");
+                plugin.getMessageManager().sendConfigMessage(sender, "error.player_only");
                 return true;
             }
             
@@ -43,7 +46,7 @@ public class TagCommand implements CommandExecutor, TabCompleter {
         
         // 所有其他指令需要管理員權限
         if (!sender.hasPermission("koukeneko.admin")) {
-            plugin.getMessageManager().sendMessage(sender, "&c你沒有權限使用此指令！");
+            plugin.getMessageManager().sendConfigMessage(sender, "error.no_permission");
             return true;
         }
         
@@ -60,12 +63,14 @@ public class TagCommand implements CommandExecutor, TabCompleter {
         // 處理 /tag <玩家名稱> add|remove <標籤ID> 格式的指令
         Player targetPlayer = Bukkit.getPlayer(args[0]);
         if (targetPlayer == null) {
-            plugin.getMessageManager().sendMessage(sender, "&c找不到玩家: " + args[0]);
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("player", args[0]);
+            plugin.getMessageManager().sendConfigMessage(sender, "tag.player_not_found", placeholders);
             return true;
         }
         
         if (args.length < 3) {
-            plugin.getMessageManager().sendMessage(sender, "&c用法: /tag <玩家名稱> <add|remove> <標籤ID>");
+            plugin.getMessageManager().sendConfigMessage(sender, "tag.help");
             return true;
         }
         
@@ -74,32 +79,48 @@ public class TagCommand implements CommandExecutor, TabCompleter {
         Tag tag = tagManager.getTag(tagId);
         
         if (tag == null) {
-            plugin.getMessageManager().sendMessage(sender, "&c找不到標籤: " + tagId);
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("tag", tagId);
+            plugin.getMessageManager().sendConfigMessage(sender, "tag.tag_not_found", placeholders);
             return true;
         }
         
         switch (action) {
             case "add":
                 if (tagManager.giveTagPermission(targetPlayer, tag)) {
-                    plugin.getMessageManager().sendMessage(sender, "&a已給予 " + targetPlayer.getName() + " 標籤權限: " + tag.getDisplay());
-                    plugin.getMessageManager().sendMessage(targetPlayer, "&a你獲得了標籤權限: " + tag.getDisplay());
+                    Map<String, String> placeholders = new HashMap<>();
+                    placeholders.put("player", targetPlayer.getName());
+                    placeholders.put("display", tag.getDisplay());
+                    plugin.getMessageManager().sendConfigMessage(sender, "tag.tag_added", placeholders);
+                    
+                    Map<String, String> playerPlaceholders = new HashMap<>();
+                    playerPlaceholders.put("display", tag.getDisplay());
+                    plugin.getMessageManager().sendConfigMessage(targetPlayer, "tag.you_got_tag", playerPlaceholders);
                 } else {
-                    plugin.getMessageManager().sendMessage(sender, "&c無法給予標籤權限！");
+                    plugin.getMessageManager().sendConfigMessage(sender, "tag.tag_add_failed");
                 }
                 break;
                 
             case "remove":
                 if (tagManager.removeTagPermission(targetPlayer, tag)) {
-                    plugin.getMessageManager().sendMessage(sender, "&a已從 " + targetPlayer.getName() + " 移除標籤權限: " + tag.getDisplay());
-                    plugin.getMessageManager().sendMessage(targetPlayer, "&c你的標籤權限已被移除: " + tag.getDisplay());
+                    Map<String, String> placeholders = new HashMap<>();
+                    placeholders.put("player", targetPlayer.getName());
+                    placeholders.put("display", tag.getDisplay());
+                    plugin.getMessageManager().sendConfigMessage(sender, "tag.tag_removed", placeholders);
+                    
+                    Map<String, String> playerPlaceholders = new HashMap<>();
+                    playerPlaceholders.put("display", tag.getDisplay());
+                    plugin.getMessageManager().sendConfigMessage(targetPlayer, "tag.your_tag_removed", playerPlaceholders);
                 } else {
-                    plugin.getMessageManager().sendMessage(sender, "&c無法移除標籤權限！");
+                    plugin.getMessageManager().sendConfigMessage(sender, "tag.tag_remove_failed");
                 }
                 break;
                 
             default:
-                plugin.getMessageManager().sendMessage(sender, "&c未知操作: " + action);
-                plugin.getMessageManager().sendMessage(sender, "&c用法: /tag <玩家名稱> <add|remove> <標籤ID>");
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("action", action);
+                plugin.getMessageManager().sendConfigMessage(sender, "tag.unknown_action", placeholders);
+                plugin.getMessageManager().sendConfigMessage(sender, "tag.help");
                 break;
         }
         
@@ -111,7 +132,7 @@ public class TagCommand implements CommandExecutor, TabCompleter {
      */
     private boolean handleCreateCommand(CommandSender sender, String[] args) {
         if (args.length < 3) {
-            plugin.getMessageManager().sendMessage(sender, "&c用法: /tag create <標籤ID> <顯示格式>");
+            plugin.getMessageManager().sendConfigMessage(sender, "tag.create_usage");
             return true;
         }
         
@@ -119,12 +140,17 @@ public class TagCommand implements CommandExecutor, TabCompleter {
         String display = args[2];
         
         if (tagManager.getTag(tagId) != null) {
-            plugin.getMessageManager().sendMessage(sender, "&c標籤ID '" + tagId + "' 已存在!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("tag", tagId);
+            plugin.getMessageManager().sendConfigMessage(sender, "tag.tag_exists", placeholders);
             return true;
         }
         
         Tag tag = tagManager.createTag(tagId, display);
-        plugin.getMessageManager().sendMessage(sender, "&a已建立標籤: " + tag.getDisplay() + " &7(ID: &f" + tag.getId() + "&7)");
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("display", tag.getDisplay());
+        placeholders.put("id", tag.getId());
+        plugin.getMessageManager().sendConfigMessage(sender, "tag.created", placeholders);
         
         return true;
     }
@@ -134,7 +160,7 @@ public class TagCommand implements CommandExecutor, TabCompleter {
      */
     private boolean handleRemoveTagCommand(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            plugin.getMessageManager().sendMessage(sender, "&c用法: /tag remove <標籤ID>");
+            plugin.getMessageManager().sendConfigMessage(sender, "tag.remove_usage");
             return true;
         }
         
@@ -142,7 +168,9 @@ public class TagCommand implements CommandExecutor, TabCompleter {
         Tag tag = tagManager.getTag(tagId);
         
         if (tag == null) {
-            plugin.getMessageManager().sendMessage(sender, "&c標籤 '" + tagId + "' 不存在!");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("tag", tagId);
+            plugin.getMessageManager().sendConfigMessage(sender, "tag.tag_not_exists", placeholders);
             return true;
         }
         
@@ -156,8 +184,9 @@ public class TagCommand implements CommandExecutor, TabCompleter {
                 // 如果玩家正在使用此標籤，也移除前綴
 //                tagManager.removeActiveTag(player);
                 // 傳送通知給玩家哪個標籤已在系統中被移除，但仍然可以使用到想變更前
-                
-                plugin.getMessageManager().sendMessage(player, "&c你所擁有的標籤 " + tag.getDisplay() + " &c已在系統中被移除刪除，你仍然可以保留標籤狀態");
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("display", tag.getDisplay());
+                plugin.getMessageManager().sendConfigMessage(player, "tag.tag_deleted_notice", placeholders);
                 affectedPlayers++;
             }
         }
@@ -173,12 +202,18 @@ public class TagCommand implements CommandExecutor, TabCompleter {
         
         // 刪除標籤
         if (tagManager.deleteTag(tagId)) {
-            plugin.getMessageManager().sendMessage(sender, "&a已刪除標籤: " + tag.getDisplay() + " &7(ID: &f" + tagId + "&7)");
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("display", tag.getDisplay());
+            placeholders.put("id", tagId);
+            plugin.getMessageManager().sendConfigMessage(sender, "tag.deleted", placeholders);
+            
             if (affectedPlayers > 0) {
-                plugin.getMessageManager().sendMessage(sender, "&e共有 " + affectedPlayers + " 位玩家的標籤權限被移除");
+                Map<String, String> countPlaceholders = new HashMap<>();
+                countPlaceholders.put("count", String.valueOf(affectedPlayers));
+                plugin.getMessageManager().sendConfigMessage(sender, "tag.affected_players", countPlaceholders);
             }
         } else {
-            plugin.getMessageManager().sendMessage(sender, "&c刪除標籤時發生錯誤!");
+            plugin.getMessageManager().sendConfigMessage(sender, "tag.delete_failed");
         }
         
         return true;
@@ -189,7 +224,7 @@ public class TagCommand implements CommandExecutor, TabCompleter {
      */
     private boolean handleReloadCommand(CommandSender sender) {
         tagManager.reload();
-        plugin.getMessageManager().sendMessage(sender, "&a標籤系統已重新載入!");
+        plugin.getMessageManager().sendConfigMessage(sender, "reload.tag_system_reloaded");
         return true;
     }
 

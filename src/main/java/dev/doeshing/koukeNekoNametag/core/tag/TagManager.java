@@ -59,10 +59,10 @@ public class TagManager {
     }
 
     /**
-     * 保存標籤設定
+     * 儲存標籤設定
      */
     public void saveTags() {
-        // 保存標籤數據
+        // 儲存標籤數據
         for (Map.Entry<String, Tag> entry : tags.entrySet()) {
             String tagId = entry.getKey();
             Tag tag = entry.getValue();
@@ -106,7 +106,7 @@ public class TagManager {
         Tag tag = new Tag(id, display);
         tags.put(id, tag);
         
-        // 保存到設定
+        // 儲存到設定
         tagsConfig.set("tags." + id + ".display", display);
         
         try {
@@ -157,7 +157,7 @@ public class TagManager {
     }
 
     /**
-     * 設置玩家的活躍標籤
+     * 設定玩家的啟用標籤
      */
     public boolean setActiveTag(Player player, Tag tag) {
         if (tag == null) {
@@ -172,7 +172,7 @@ public class TagManager {
         // 先移除現有標籤
         removeActiveTag(player);
         
-        // 執行設置標籤的指令
+        // 執行設定標籤的指令
         List<String> commands = plugin.getConfig().getStringList("command.settag");
         for (String cmd : commands) {
             cmd = cmd.replace("{player}", player.getName())
@@ -185,7 +185,7 @@ public class TagManager {
     }
 
     /**
-     * 移除玩家的活躍標籤
+     * 移除玩家的啟用標籤
      */
     public boolean removeActiveTag(Player player) {
         // 執行移除標籤的指令

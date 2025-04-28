@@ -51,7 +51,7 @@ public class CommandSystem {
             // 3. 指令屬性設定
             pluginCommand.setExecutor(executor); // 誰來執行指令邏輯
 
-            // 4. 如果執行器也實現了 TabCompleter 接口，則設置為 Tab 補全器
+            // 4. 如果執行器也實現了 TabCompleter 介面，則設定為 Tab 補全器
             if (executor instanceof TabCompleter) {
                 pluginCommand.setTabCompleter((TabCompleter) executor);
             }

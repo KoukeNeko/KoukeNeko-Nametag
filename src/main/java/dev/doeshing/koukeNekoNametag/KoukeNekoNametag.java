@@ -4,6 +4,7 @@ import dev.doeshing.koukeNekoNametag.commands.ReloadCommand;
 import dev.doeshing.koukeNekoNametag.commands.TagCommand;
 import dev.doeshing.koukeNekoNametag.core.CommandSystem;
 import dev.doeshing.koukeNekoNametag.core.MessageManager;
+import dev.doeshing.koukeNekoNametag.core.lang.LanguageManager;
 import dev.doeshing.koukeNekoNametag.core.tag.TagManager;
 import dev.doeshing.koukeNekoNametag.core.tag.TagMenu;
 import org.bukkit.Bukkit;
@@ -17,11 +18,15 @@ public final class KoukeNekoNametag extends JavaPlugin {
     private CommandSystem commandSystem;
     private TagManager tagManager;
     private TagMenu tagMenu;
+    private LanguageManager languageManager;
 
     @Override
     public void onEnable() {
         // 初始化設定
         saveDefaultConfig();
+        
+        // 初始化語言管理器
+        this.languageManager = new LanguageManager(this);
         
         // 初始化消息管理器
         this.messageManager = new MessageManager(this);
@@ -43,7 +48,7 @@ public final class KoukeNekoNametag extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // 保存標籤數據
+        // 儲存標籤數據
         if (tagManager != null) {
             tagManager.saveTags();
         }
@@ -84,6 +89,10 @@ public final class KoukeNekoNametag extends JavaPlugin {
     public TagManager getTagManager() {
         return tagManager;
     }
+    
+    public LanguageManager getLanguageManager() {
+        return languageManager;
+    }
 
     /**
      * 重新載入插件設定
@@ -93,6 +102,12 @@ public final class KoukeNekoNametag extends JavaPlugin {
         try {
             super.reloadConfig();
 
+            // 重新載入語言設定
+            if (languageManager != null) {
+                languageManager.reload();
+                getLogger().info("語言設定已重新載入");
+            }
+            
             // 重新載入相關設定
             if (messageManager != null) {
                 messageManager.loadPrefix();

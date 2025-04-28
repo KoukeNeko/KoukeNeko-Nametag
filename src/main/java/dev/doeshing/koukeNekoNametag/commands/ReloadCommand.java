@@ -8,7 +8,9 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ReloadCommand implements CommandExecutor, TabCompleter {
 
@@ -22,13 +24,13 @@ public class ReloadCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         // 檢查權限
         if (!sender.hasPermission("koukeneko.admin")) {
-            plugin.getMessageManager().sendMessage(sender, "&c你沒有權限使用此指令!");
+            plugin.getMessageManager().sendConfigMessage(sender, "error.no_permission");
             return true;
         }
 
         // 確保有參數
         if (args.length < 1) {
-            plugin.getMessageManager().sendMessage(sender, "&c用法: /" + label + " reload");
+            plugin.getMessageManager().sendConfigMessage(sender, "reload.usage", Map.of("label", label));
             return true;
         }
 
@@ -38,10 +40,12 @@ public class ReloadCommand implements CommandExecutor, TabCompleter {
             plugin.reloadConfig();
 
             // 發送重載完成訊息
-            plugin.getMessageManager().sendMessage(sender, "&a插件設定成功重新載入!");
+            plugin.getMessageManager().sendConfigMessage(sender, "reload.success");
         } else {
             // 未知指令
-            plugin.getMessageManager().sendMessage(sender, "&c未知的子指令: " + args[0]);
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("command", args[0]);
+            plugin.getMessageManager().sendConfigMessage(sender, "error.unknown_subcommand", placeholders);
         }
 
         return true;
