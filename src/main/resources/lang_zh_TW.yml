@@ -5,6 +5,7 @@ error:
   no_permission: "&c你沒有權限使用此指令！"
   player_only: "&c此指令只能由玩家使用！"
   unknown_subcommand: "&c未知的子指令: {command}"
+  message_not_found: "&c找不到訊息: {message}"
   
 # 標籤指令訊息
 tag:
