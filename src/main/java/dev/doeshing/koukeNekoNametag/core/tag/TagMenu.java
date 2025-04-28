@@ -38,13 +38,14 @@ public class TagMenu implements Listener {
         // 獲取玩家可用的標籤
         List<Tag> availableTags = tagManager.getAvailableTags(player);
         if (availableTags.isEmpty()) {
-            plugin.getMessageManager().sendMessage(player, "&c你沒有可用的標籤!");
+            plugin.getMessageManager().sendConfigMessage(player, "menu.no_tags");
             return;
         }
 
         // 建立菜單
         int rows = Math.min(6, (availableTags.size() + 8) / 9 + 1); // 計算需要的行數
-        Component title = LegacyComponentSerializer.legacyAmpersand().deserialize("&8標籤選擇");
+        Component title = LegacyComponentSerializer.legacyAmpersand().deserialize(
+                plugin.getMessageManager().getMessage("menu.title"));
         Inventory menu = Bukkit.createInventory(null, rows * 9, title);
 
         // 填充菜單
@@ -53,7 +54,8 @@ public class TagMenu implements Listener {
         // 新增移除標籤的選項
         ItemStack removeItem = new ItemStack(Material.BARRIER);
         ItemMeta removeMeta = removeItem.getItemMeta();
-        removeMeta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize("&c移除目前標籤"));
+        removeMeta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize(
+                plugin.getMessageManager().getMessage("menu.remove_button")));
         removeItem.setItemMeta(removeMeta);
         menu.setItem(rows * 9 - 1, removeItem);
 
@@ -80,12 +82,20 @@ public class TagMenu implements Listener {
             meta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize(tag.getDisplay()));
             
             List<Component> lore = new ArrayList<>();
-            lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize("&7點擊選擇此標籤"));
-            lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize("&7ID: &f" + tag.getId()));
+            lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize(
+                    plugin.getMessageManager().getMessage("menu.select_tag")));
+            
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("id", tag.getId());
+            lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize(
+                    plugin.getMessageManager().getMessage("menu.tag_id", placeholders)));
 
             // 檢查管理員權限
             if (player.hasPermission("koukeneko.admin")) {
-                lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize("&7權限: &f" + tag.getPermission()));
+                placeholders.clear();
+                placeholders.put("permission", tag.getPermission());
+                lore.add(LegacyComponentSerializer.legacyAmpersand().deserialize(
+                        plugin.getMessageManager().getMessage("menu.tag_permission", placeholders)));
             }
             
             meta.lore(lore);
@@ -123,7 +133,7 @@ public class TagMenu implements Listener {
         if (slot == openMenu.getSize() - 1 && event.getCurrentItem() != null && 
                 event.getCurrentItem().getType() == Material.BARRIER) {
             tagManager.removeActiveTag(player);
-            plugin.getMessageManager().sendMessage(player, "&a已移除標籤!");
+            plugin.getMessageManager().sendConfigMessage(player, "menu.tag_removed");
             player.closeInventory();
             return;
         }
@@ -138,9 +148,11 @@ public class TagMenu implements Listener {
         
         // 設置活躍標籤
         if (tagManager.setActiveTag(player, selectedTag)) {
-            plugin.getMessageManager().sendMessage(player, "&a已設定標籤: " + selectedTag.getDisplay());
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("display", selectedTag.getDisplay());
+            plugin.getMessageManager().sendConfigMessage(player, "menu.tag_set", placeholders);
         } else {
-            plugin.getMessageManager().sendMessage(player, "&c無法設定標籤!");
+            plugin.getMessageManager().sendConfigMessage(player, "menu.tag_set_failed");
         }
         
         player.closeInventory();

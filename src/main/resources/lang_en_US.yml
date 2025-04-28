@@ -1,0 +1,51 @@
+# KoukeNeko Tag System Language File - English (en_US)
+
+# General Messages
+error:
+  no_permission: "&cYou don't have permission to use this command!"
+  player_only: "&cThis command can only be used by players!"
+  unknown_subcommand: "&cUnknown subcommand: {command}"
+  
+# Tag Command Messages
+tag:
+  help: "&cUsage: /tag <player> <add|remove> <tagID>"
+  create_usage: "&cUsage: /tag create <tagID> <display format>"
+  remove_usage: "&cUsage: /tag remove <tagID>"
+  player_not_found: "&cPlayer not found: {player}"
+  tag_not_found: "&cTag not found: {tag}"
+  tag_exists: "&cTag ID '{tag}' already exists!"
+  tag_not_exists: "&cTag '{tag}' does not exist!"
+  unknown_action: "&cUnknown action: {action}"
+  
+  # Success Messages
+  created: "&aCreated tag: {display} &7(ID: &f{id}&7)"
+  deleted: "&aDeleted tag: {display} &7(ID: &f{id}&7)"
+  affected_players: "&eTag permission removed from {count} players"
+  tag_added: "&aGave {player} permission to use tag: {display}"
+  tag_removed: "&aRemoved tag permission from {player}: {display}"
+  tag_add_failed: "&cFailed to give tag permission!"
+  tag_remove_failed: "&cFailed to remove tag permission!"
+  delete_failed: "&cError occurred while deleting tag!"
+  
+  # Player Notifications
+  you_got_tag: "&aYou received tag permission: {display}"
+  your_tag_removed: "&cYour tag permission has been removed: {display}"
+  tag_deleted_notice: "&cThe tag {display} &cyou owned has been removed from the system, but you can keep your current state until you change it"
+  
+# Tag Menu Messages
+menu:
+  title: "&8Tag Selection"
+  no_tags: "&cYou don't have any available tags!"
+  remove_button: "&cRemove Current Tag"
+  select_tag: "&7Click to select this tag"
+  tag_id: "&7ID: &f{id}"
+  tag_permission: "&7Permission: &f{permission}"
+  tag_set: "&aTag set: {display}"
+  tag_set_failed: "&cCould not set tag!"
+  tag_removed: "&aTag removed!"
+  
+# Reload Command Messages
+reload:
+  success: "&aPlugin configuration successfully reloaded!"
+  tag_system_reloaded: "&aTag system reloaded!"
+  usage: "&cUsage: /{label} reload"
