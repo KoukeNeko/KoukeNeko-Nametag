@@ -5,6 +5,7 @@ error:
   no_permission: "&cYou don't have permission to use this command!"
   player_only: "&cThis command can only be used by players!"
   unknown_subcommand: "&cUnknown subcommand: {command}"
+  message_not_found: "&cMessage not found: {message}"
   
 # Tag Command Messages
 tag:
