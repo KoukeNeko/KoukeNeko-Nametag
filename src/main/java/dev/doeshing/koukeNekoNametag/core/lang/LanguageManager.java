@@ -106,7 +106,8 @@ public class LanguageManager {
         
         // 如果找不到指定路徑的訊息，返回錯誤訊息
         if (message == null) {
-            return "&c找不到訊息: " + path;
+            String fallbackMessage = langConfig.getString("error.message_not_found", "Message not found: {path}");
+            return fallbackMessage.replace("{path}", path);
         }
         
         // 替換佔位符
