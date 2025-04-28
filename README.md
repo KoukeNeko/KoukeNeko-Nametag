@@ -135,39 +135,39 @@ KoukeNeko Nametag 是一個功能強大且用戶友好的 Minecraft 稱號/前�
 
 - ✅ 簡單易用的標籤選擇 GUI 界面
 - ✅ 基於權限的標籤使用控制
-- ✅ 支持顏色代碼的自定義標籤創建
-- ✅ 完整的管理員標籤管理命令
+- ✅ 支持顏色代碼的自定義標籤建立
+- ✅ 完整的管理員標籤管理指令
 - ✅ 與 LuckPerms 和 TAB 插件的無縫整合
-- ✅ 永久性標籤存儲和配置
-- ✅ 簡單的配置重載命令
+- ✅ 永久性標籤存儲和設定
+- ✅ 簡單的設定重載指令
 
 ## 📂 安裝方式
 
-1. 將 `KoukeNeko-Nametag.jar` 文件放入服務器的 `plugins` 文件夾
-2. 重啟服務器或使用 `/reload confirm` 命令
-3. 根據需要在 `config.yml` 和 `tags.yml` 中配置插件設置
+1. 將 `KoukeNeko-Nametag.jar` 文件放入伺服器的 `plugins` 文件夾
+2. 重啟伺服器或使用 `/reload confirm` 指令
+3. 根據需要在 `config.yml` 和 `tags.yml` 中設定插件設置
 
-> **注意：** 本插件可以與任何稱號顯示方式搭配使用。預設配置使用了TAB插件和LuckPerms的指令，但您可以在config.yml中修改這些設定以配合其他插件。
+> **注意：** 本插件可以與任何稱號顯示方式搭配使用。預設設定使用了TAB插件和LuckPerms的指令，但您可以在config.yml中修改這些設定以配合其他插件。
 
-## 🚀 命令
+## 🚀 指令
 
-| 命令 | 描述 | 權限 |
+| 指令 | 描述 | 權限 |
 |------|------|------|
 | `/tag` | 打開標籤選擇選單 | 無 |
-| `/tag create <標籤ID> <顯示格式>` | 創建新標籤 | `koukeneko.admin` |
+| `/tag create <標籤ID> <顯示格式>` | 建立新標籤 | `koukeneko.admin` |
 | `/tag remove <標籤ID>` | 刪除標籤 | `koukeneko.admin` |
 | `/tag <玩家> add <標籤ID>` | 給予玩家使用標籤的權限 | `koukeneko.admin` |
 | `/tag <玩家> remove <標籤ID>` | 移除玩家的標籤權限 | `koukeneko.admin` |
-| `/koukeneko reload` (`/kn reload`) | 重新載入插件配置 | `koukeneko.admin` |
+| `/koukeneko reload` (`/kn reload`) | 重新載入插件設定 | `koukeneko.admin` |
 
 ## 🔑 權限
 
 | 權限 | 描述 |
 |------|------|
-| `koukeneko.admin` | 擁有所有管理命令的權限 |
+| `koukeneko.admin` | 擁有所有管理指令的權限 |
 | `koukeneko.tags.<標籤ID>` | 使用特定標籤的權限 |
 
-## ⚙️ 配置
+## ⚙️ 設定
 
 ### config.yml
 
@@ -224,20 +224,20 @@ tags:
 ## 📱 使用方法
 
 ### 玩家使用
-1. 使用 `/tag` 命令打開標籤選擇界面
+1. 使用 `/tag` 指令打開標籤選擇界面
 2. 點擊任何可用標籤將其應用到您的名字
-3. 點擊障礙物圖標（右下角）移除當前標籤
+3. 點擊障礙物圖標（右下角）移除目前標籤
 
 ### 管理員使用
-1. 使用 `/tag create <ID> <顯示>` 創建標籤（例如：`/tag create mvp &7[&bMVP&7]&f`）
+1. 使用 `/tag create <ID> <顯示>` 建立標籤（例如：`/tag create mvp &7[&bMVP&7]&f`）
 2. 使用 `/tag <玩家> add <ID>` 授予玩家權限
 3. 如需移除標籤，使用 `/tag remove <ID>`
 
 ## ⚠️ 注意事項
 
 - 顏色代碼使用 `&` 符號（例如：`&7[&aVIP&7]` 表示灰色括號內的綠色「VIP」文字）
-- 預設配置使用了與 TAB 插件和 LuckPerms 兼容的指令，但您可以在 config.yml 中修改這些設定
-- tags.yml 文件包含預設標籤，您可以根據需要修改或添加新標籤
+- 預設設定使用了與 TAB 插件和 LuckPerms 兼容的指令，但您可以在 config.yml 中修改這些設定
+- tags.yml 文件包含預設標籤，您可以根據需要修改或新增新標籤
 - 刪除標籤時，所有擁有該標籤權限的在線玩家都會收到通知
 
 ## 🤝 貢獻

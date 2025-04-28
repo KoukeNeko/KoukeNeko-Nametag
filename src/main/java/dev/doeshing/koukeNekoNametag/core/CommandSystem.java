@@ -72,10 +72,10 @@ public class CommandSystem {
             // 5. 將指令註冊到 CommandMap
             commandMap.register(plugin.getName(), pluginCommand);
 
-            plugin.getLogger().info("已註冊命令: " + commandName);
+            plugin.getLogger().info("已註冊指令: " + commandName);
 
         } catch (Exception e) {
-            plugin.getLogger().severe("註冊命令 " + commandName + " 時發生錯誤:");
+            plugin.getLogger().severe("註冊指令 " + commandName + " 時發生錯誤:");
             e.printStackTrace();
         }
     }

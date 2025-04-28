@@ -42,7 +42,7 @@ public class TagMenu implements Listener {
             return;
         }
 
-        // 創建菜單
+        // 建立菜單
         int rows = Math.min(6, (availableTags.size() + 8) / 9 + 1); // 計算需要的行數
         Component title = LegacyComponentSerializer.legacyAmpersand().deserialize("&8標籤選擇");
         Inventory menu = Bukkit.createInventory(null, rows * 9, title);
@@ -50,7 +50,7 @@ public class TagMenu implements Listener {
         // 填充菜單
         populateMenu(menu, availableTags, player);
 
-        // 添加移除標籤的選項
+        // 新增移除標籤的選項
         ItemStack removeItem = new ItemStack(Material.BARRIER);
         ItemMeta removeMeta = removeItem.getItemMeta();
         removeMeta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize("&c移除目前標籤"));

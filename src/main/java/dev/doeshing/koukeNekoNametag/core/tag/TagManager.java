@@ -39,7 +39,7 @@ public class TagManager {
     }
 
     /**
-     * 從配置中加載所有標籤
+     * 從設定中加載所有標籤
      */
     private void loadTags() {
         tags.clear();
@@ -59,7 +59,7 @@ public class TagManager {
     }
 
     /**
-     * 保存標籤配置
+     * 保存標籤設定
      */
     public void saveTags() {
         // 保存標籤數據
@@ -100,13 +100,13 @@ public class TagManager {
     }
 
     /**
-     * 創建新標籤
+     * 建立新標籤
      */
     public Tag createTag(String id, String display) {
         Tag tag = new Tag(id, display);
         tags.put(id, tag);
         
-        // 保存到配置
+        // 保存到設定
         tagsConfig.set("tags." + id + ".display", display);
         
         try {
@@ -177,7 +177,7 @@ public class TagManager {
         for (String cmd : commands) {
             cmd = cmd.replace("{player}", player.getName())
                     .replace("{tag}", tag.getDisplay());
-            plugin.getLogger().info("執行命令: " + cmd);
+            plugin.getLogger().info("執行指令: " + cmd);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
         }
         
@@ -192,7 +192,7 @@ public class TagManager {
         List<String> commands = plugin.getConfig().getStringList("command.remove");
         for (String cmd : commands) {
             cmd = cmd.replace("{player}", player.getName());
-            plugin.getLogger().info("執行命令: " + cmd);
+            plugin.getLogger().info("執行指令: " + cmd);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
         }
         
@@ -207,12 +207,12 @@ public class TagManager {
             return false;
         }
         
-        // 執行添加權限的指令
+        // 執行新增權限的指令
         List<String> commands = plugin.getConfig().getStringList("command.add_permission");
         for (String cmd : commands) {
             cmd = cmd.replace("{player}", player.getName())
                     .replace("{tag}", tag.getPermission());
-            plugin.getLogger().info("執行命令: " + cmd);
+            plugin.getLogger().info("執行指令: " + cmd);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
         }
         
@@ -232,7 +232,7 @@ public class TagManager {
         for (String cmd : commands) {
             cmd = cmd.replace("{player}", player.getName())
                     .replace("{tag}", tag.getPermission());
-            plugin.getLogger().info("執行命令: " + cmd);
+            plugin.getLogger().info("執行指令: " + cmd);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
         }
         

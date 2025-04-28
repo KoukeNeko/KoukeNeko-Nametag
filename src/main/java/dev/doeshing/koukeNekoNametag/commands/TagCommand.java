@@ -29,10 +29,10 @@ public class TagCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        // 只有 /tag 命令時，打開選擇菜單（只有玩家可以使用）
+        // 只有 /tag 指令時，打開選擇菜單（只有玩家可以使用）
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
-                plugin.getMessageManager().sendMessage(sender, "&c此命令只能由玩家使用！");
+                plugin.getMessageManager().sendMessage(sender, "&c此指令只能由玩家使用！");
                 return true;
             }
             
@@ -41,23 +41,23 @@ public class TagCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         
-        // 所有其他命令需要管理員權限
+        // 所有其他指令需要管理員權限
         if (!sender.hasPermission("koukeneko.admin")) {
-            plugin.getMessageManager().sendMessage(sender, "&c你沒有權限使用此命令！");
+            plugin.getMessageManager().sendMessage(sender, "&c你沒有權限使用此指令！");
             return true;
         }
         
-        // 處理 /tag create <標籤ID> <顯示格式> 命令
+        // 處理 /tag create <標籤ID> <顯示格式> 指令
         if (args[0].equalsIgnoreCase("create")) {
             return handleCreateCommand(sender, args);
         }
         
-        // 處理 /tag remove <標籤ID> 命令
+        // 處理 /tag remove <標籤ID> 指令
         if (args[0].equalsIgnoreCase("remove")) {
             return handleRemoveTagCommand(sender, args);
         }
         
-        // 處理 /tag <玩家名稱> add|remove <標籤ID> 格式的命令
+        // 處理 /tag <玩家名稱> add|remove <標籤ID> 格式的指令
         Player targetPlayer = Bukkit.getPlayer(args[0]);
         if (targetPlayer == null) {
             plugin.getMessageManager().sendMessage(sender, "&c找不到玩家: " + args[0]);
@@ -107,7 +107,7 @@ public class TagCommand implements CommandExecutor, TabCompleter {
     }
     
     /**
-     * 處理創建標籤的命令
+     * 處理建立標籤的指令
      */
     private boolean handleCreateCommand(CommandSender sender, String[] args) {
         if (args.length < 3) {
@@ -124,13 +124,13 @@ public class TagCommand implements CommandExecutor, TabCompleter {
         }
         
         Tag tag = tagManager.createTag(tagId, display);
-        plugin.getMessageManager().sendMessage(sender, "&a已創建標籤: " + tag.getDisplay() + " &7(ID: &f" + tag.getId() + "&7)");
+        plugin.getMessageManager().sendMessage(sender, "&a已建立標籤: " + tag.getDisplay() + " &7(ID: &f" + tag.getId() + "&7)");
         
         return true;
     }
     
     /**
-     * 處理刪除標籤的命令
+     * 處理刪除標籤的指令
      */
     private boolean handleRemoveTagCommand(CommandSender sender, String[] args) {
         if (args.length < 2) {
@@ -167,7 +167,7 @@ public class TagCommand implements CommandExecutor, TabCompleter {
         for (String cmd : commands) {
             cmd = cmd.replace("{tag}", tag.getPermission())
                    .replace("{display}", tag.getDisplay());
-            plugin.getLogger().info("執行移除所有玩家標籤權限命令: " + cmd);
+            plugin.getLogger().info("執行移除所有玩家標籤權限指令: " + cmd);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
         }
         
@@ -185,7 +185,7 @@ public class TagCommand implements CommandExecutor, TabCompleter {
     }
     
     /**
-     * 處理重載命令
+     * 處理重載指令
      */
     private boolean handleReloadCommand(CommandSender sender) {
         tagManager.reload();

@@ -22,7 +22,7 @@ public class ReloadCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         // 檢查權限
         if (!sender.hasPermission("koukeneko.admin")) {
-            plugin.getMessageManager().sendMessage(sender, "&c你沒有權限使用此命令!");
+            plugin.getMessageManager().sendMessage(sender, "&c你沒有權限使用此指令!");
             return true;
         }
 
@@ -32,16 +32,16 @@ public class ReloadCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // 處理命令
+        // 處理指令
         if (args[0].equalsIgnoreCase("reload")) {
-            // 重新載入配置文件
+            // 重新載入設定文件
             plugin.reloadConfig();
 
             // 發送重載完成訊息
             plugin.getMessageManager().sendMessage(sender, "&a插件設定成功重新載入!");
         } else {
             // 未知指令
-            plugin.getMessageManager().sendMessage(sender, "&c未知的子命令: " + args[0]);
+            plugin.getMessageManager().sendMessage(sender, "&c未知的子指令: " + args[0]);
         }
 
         return true;
@@ -52,7 +52,7 @@ public class ReloadCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {
-            // 只有一個子命令: reload
+            // 只有一個子指令: reload
             if ("reload".startsWith(args[0].toLowerCase())) {
                 completions.add("reload");
             }

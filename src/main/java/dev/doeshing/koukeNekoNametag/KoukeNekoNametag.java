@@ -20,13 +20,13 @@ public final class KoukeNekoNametag extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // 初始化配置
+        // 初始化設定
         saveDefaultConfig();
         
         // 初始化消息管理器
         this.messageManager = new MessageManager(this);
         
-        // 初始化命令系統
+        // 初始化指令系統
         this.commandSystem = new CommandSystem(this);
         
         // 初始化標籤管理器
@@ -35,7 +35,7 @@ public final class KoukeNekoNametag extends JavaPlugin {
         // 初始化標籤選單
         this.tagMenu = new TagMenu(this, tagManager);
         
-        // 註冊命令
+        // 註冊指令
         registerCommands();
         
         getLogger().info("KoukeNeko 標籤系統已啟用！");
@@ -52,26 +52,26 @@ public final class KoukeNekoNametag extends JavaPlugin {
     }
 
     /**
-     * 註冊所有命令
+     * 註冊所有指令
      */
     private void registerCommands() {
-        // 註冊 /koukeneko reload 命令
+        // 註冊 /koukeneko reload 指令
         commandSystem.registerCommand(
                 "koukeneko",
                 new ReloadCommand(this),
                 "koukeneko.admin",
-                "KoukeNeko 插件主命令",
+                "KoukeNeko 插件主指令",
                 "/koukeneko reload",
                 "kn"
         );
         
-        // 註冊 /tag 命令
+        // 註冊 /tag 指令
         TagCommand tagCommand = new TagCommand(this, tagManager, tagMenu);
         commandSystem.registerCommand(
                 "tag",
                 tagCommand,
-                null, // 不需要權限，具體權限檢查在命令處理中
-                "標籤系統命令",
+                null, // 不需要權限，具體權限檢查在指令處理中
+                "標籤系統指令",
                 "/tag [參數]",
                 "標籤", "tags"
         );
@@ -86,14 +86,14 @@ public final class KoukeNekoNametag extends JavaPlugin {
     }
 
     /**
-     * 重新載入插件配置
+     * 重新載入插件設定
      */
     @Override
     public void reloadConfig() {
         try {
             super.reloadConfig();
 
-            // 重新載入相關配置
+            // 重新載入相關設定
             if (messageManager != null) {
                 messageManager.loadPrefix();
                 getLogger().info("訊息前綴已重新載入");
