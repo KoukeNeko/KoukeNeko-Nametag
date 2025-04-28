@@ -145,7 +145,7 @@ KoukeNeko Nametag 是一個功能強大且使用者友好的 Minecraft 稱號/�
 
 1. 將 `KoukeNeko-Nametag.jar` 文件放入伺服器的 `plugins` 文件夾
 2. 重啟伺服器或使用 `/reload confirm` 指令
-3. 根據需要在 `config.yml` 和 `tags.yml` 中設定插件設置
+3. 根據需要在 `config.yml` 和 `tags.yml` 中設定插件設定
 
 > **注意：** 本插件可以與任何稱號顯示方式搭配使用。預設設定使用了TAB插件和LuckPerms的指令，但您可以在config.yml中修改這些設定以配合其他插件。
 
@@ -225,8 +225,8 @@ tags:
 
 ### 玩家使用
 1. 使用 `/tag` 指令打開標籤選擇界面
-2. 點擊任何可用標籤將其應用到您的名字
-3. 點擊障礙物圖標（右下角）移除目前標籤
+2. 點選任何可用標籤將其應用到您的名字
+3. 點選障礙物圖標（右下角）移除目前標籤
 
 ### 管理員使用
 1. 使用 `/tag create <ID> <顯示>` 建立標籤（例如：`/tag create mvp &7[&bMVP&7]&f`）

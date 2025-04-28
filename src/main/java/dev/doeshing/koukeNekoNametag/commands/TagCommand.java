@@ -32,7 +32,7 @@ public class TagCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        // 只有 /tag 指令時，打開選擇菜單（只有玩家可以使用）
+        // 只有 /tag 指令時，打開選擇選單（只有玩家可以使用）
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
                 plugin.getMessageManager().sendConfigMessage(sender, "error.player_only");

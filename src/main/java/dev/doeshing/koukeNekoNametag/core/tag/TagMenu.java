@@ -17,7 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 /**
- * 標籤選擇菜單
+ * 標籤選擇選單
  */
 public class TagMenu implements Listener {
     private final KoukeNekoNametag plugin;
@@ -42,13 +42,13 @@ public class TagMenu implements Listener {
             return;
         }
 
-        // 建立菜單
+        // 建立選單
         int rows = Math.min(6, (availableTags.size() + 8) / 9 + 1); // 計算需要的行數
         Component title = LegacyComponentSerializer.legacyAmpersand().deserialize(
                 plugin.getMessageManager().getMessage("menu.title"));
         Inventory menu = Bukkit.createInventory(null, rows * 9, title);
 
-        // 填充菜單
+        // 填充選單
         populateMenu(menu, availableTags, player);
 
         // 新增移除標籤的選項
@@ -59,16 +59,16 @@ public class TagMenu implements Listener {
         removeItem.setItemMeta(removeMeta);
         menu.setItem(rows * 9 - 1, removeItem);
 
-        // 保存菜單和標籤列表
+        // 保存選單和標籤列表
         openMenus.put(player.getUniqueId(), menu);
         menuTags.put(player.getUniqueId(), availableTags);
 
-        // 打開菜單
+        // 打開選單
         player.openInventory(menu);
     }
 
     /**
-     * 填充菜單物品
+     * 填充選單物品
      */
     private void populateMenu(Inventory menu, List<Tag> tags, Player player) {
         for (int i = 0; i < tags.size(); i++) {
@@ -78,7 +78,7 @@ public class TagMenu implements Listener {
             ItemStack item = new ItemStack(Material.NAME_TAG);
             ItemMeta meta = item.getItemMeta();
             
-            // 設置名稱和描述
+            // 設定名稱和描述
             meta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize(tag.getDisplay()));
             
             List<Component> lore = new ArrayList<>();
@@ -106,7 +106,7 @@ public class TagMenu implements Listener {
     }
 
     /**
-     * 處理菜單點擊事件
+     * 處理選單點選事件
      */
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
@@ -129,7 +129,7 @@ public class TagMenu implements Listener {
             return;
         }
         
-        // 檢查是否點擊了移除標籤的選項
+        // 檢查是否點選了移除標籤的選項
         if (slot == openMenu.getSize() - 1 && event.getCurrentItem() != null && 
                 event.getCurrentItem().getType() == Material.BARRIER) {
             tagManager.removeActiveTag(player);
@@ -146,7 +146,7 @@ public class TagMenu implements Listener {
         
         Tag selectedTag = tags.get(slot);
         
-        // 設置活躍標籤
+        // 設定啟用標籤
         if (tagManager.setActiveTag(player, selectedTag)) {
             Map<String, String> placeholders = new HashMap<>();
             placeholders.put("display", selectedTag.getDisplay());

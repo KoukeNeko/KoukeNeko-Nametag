@@ -37,7 +37,7 @@ menu:
   title: "&8標籤選擇"
   no_tags: "&c你沒有可用的標籤!"
   remove_button: "&c移除目前標籤"
-  select_tag: "&7點擊選擇此標籤"
+  select_tag: "&7點選選擇此標籤"
   tag_id: "&7ID: &f{id}"
   tag_permission: "&7權限: &f{permission}"
   tag_set: "&a已設定標籤: {display}"

@@ -157,7 +157,7 @@ public class TagManager {
     }
 
     /**
-     * 設置玩家的活躍標籤
+     * 設定玩家的啟用標籤
      */
     public boolean setActiveTag(Player player, Tag tag) {
         if (tag == null) {
@@ -172,7 +172,7 @@ public class TagManager {
         // 先移除現有標籤
         removeActiveTag(player);
         
-        // 執行設置標籤的指令
+        // 執行設定標籤的指令
         List<String> commands = plugin.getConfig().getStringList("command.settag");
         for (String cmd : commands) {
             cmd = cmd.replace("{player}", player.getName())
@@ -185,7 +185,7 @@ public class TagManager {
     }
 
     /**
-     * 移除玩家的活躍標籤
+     * 移除玩家的啟用標籤
      */
     public boolean removeActiveTag(Player player) {
         // 執行移除標籤的指令
