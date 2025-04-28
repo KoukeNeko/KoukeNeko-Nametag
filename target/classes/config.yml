@@ -1,0 +1,19 @@
+# 基本設定
+prefix: "&7[&6&l標籤&7&l系統&7]&f" # 訊息前綴
+language: "zh_TW" # 支援的語言: zh_TW, en_US
+
+# 當選擇標籤後要執行的系統指令
+command: 
+  settag: # 設定標籤
+    - "tab player {player} tagprefix {tag}"
+    - "tab player {player} tabprefix {tag}"
+  remove: # 移除標籤
+    - "tab player {player} tagprefix"
+    - "tab player {player} tabprefix"
+  add_permission: # 增加權限
+    - "lp user {player} permission set {tag}" # 增加權限
+  remove_permission: # 移除權限
+    - "lp user {player} permission unset {tag}" # 移除權限
+  remove_permission_all: # 移除所有玩家的標籤權限
+    - "lp group default permission unset {tag}" # 移除預設組的權限
+    - "lp user * permission unset {tag}" # 移除所有使用者的權限
