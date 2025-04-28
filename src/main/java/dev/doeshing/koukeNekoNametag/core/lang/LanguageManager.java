@@ -33,7 +33,7 @@ public class LanguageManager {
     private void loadLanguage() {
         langFile = new File(plugin.getDataFolder(), "lang_" + language + ".yml");
         
-        // 如果語言文件不存在，嘗試從資源目錄保存
+        // 如果語言文件不存在，嘗試從資源目錄儲存
         if (!langFile.exists()) {
             try {
                 InputStream defaultLangStream = plugin.getResource("lang_" + language + ".yml");
@@ -47,7 +47,7 @@ public class LanguageManager {
                     plugin.saveResource("lang_" + language + ".yml", false);
                 }
             } catch (Exception e) {
-                plugin.getLogger().severe("無法保存語言檔: " + e.getMessage());
+                plugin.getLogger().severe("無法儲存語言檔: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -82,13 +82,13 @@ public class LanguageManager {
             }
         }
         
-        // 如果有更新，保存文件
+        // 如果有更新，儲存文件
         if (updated) {
             try {
                 langConfig.save(langFile);
                 plugin.getLogger().info("語言檔已更新: " + langFile.getName());
             } catch (IOException e) {
-                plugin.getLogger().severe("無法保存更新的語言檔: " + e.getMessage());
+                plugin.getLogger().severe("無法儲存更新的語言檔: " + e.getMessage());
                 e.printStackTrace();
             }
         }

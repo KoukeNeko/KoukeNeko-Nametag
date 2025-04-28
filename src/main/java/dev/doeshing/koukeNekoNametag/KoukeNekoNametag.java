@@ -48,7 +48,7 @@ public final class KoukeNekoNametag extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // 保存標籤數據
+        // 儲存標籤數據
         if (tagManager != null) {
             tagManager.saveTags();
         }

@@ -59,7 +59,7 @@ public class TagMenu implements Listener {
         removeItem.setItemMeta(removeMeta);
         menu.setItem(rows * 9 - 1, removeItem);
 
-        // 保存選單和標籤列表
+        // 儲存選單和標籤列表
         openMenus.put(player.getUniqueId(), menu);
         menuTags.put(player.getUniqueId(), availableTags);
 

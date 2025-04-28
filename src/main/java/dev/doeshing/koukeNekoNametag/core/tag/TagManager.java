@@ -59,10 +59,10 @@ public class TagManager {
     }
 
     /**
-     * 保存標籤設定
+     * 儲存標籤設定
      */
     public void saveTags() {
-        // 保存標籤數據
+        // 儲存標籤數據
         for (Map.Entry<String, Tag> entry : tags.entrySet()) {
             String tagId = entry.getKey();
             Tag tag = entry.getValue();
@@ -106,7 +106,7 @@ public class TagManager {
         Tag tag = new Tag(id, display);
         tags.put(id, tag);
         
-        // 保存到設定
+        // 儲存到設定
         tagsConfig.set("tags." + id + ".display", display);
         
         try {
