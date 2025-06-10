@@ -17,6 +17,11 @@ KoukeNeko Nametag is a powerful and user-friendly Minecraft tag/prefix managemen
 - ✅ Integration with LuckPerms and TAB plugin
 - ✅ Persistent tag storage and configuration
 - ✅ Simple command to reload configuration
+- 🆕 **Highly customizable config.yml with new sections**
+- 🆕 **Flexible menu settings (title, size, materials, positions)**
+- 🆕 **Configurable command details (names, aliases, descriptions)**
+- 🆕 **File management options and debug settings**
+- 🆕 **Multi-language support with customizable language files**
 
 ## 📂 Installation
 
@@ -48,8 +53,41 @@ KoukeNeko Nametag is a powerful and user-friendly Minecraft tag/prefix managemen
 
 ### config.yml
 
+The config.yml file has been significantly expanded with new customization options:
+
 ```yaml
+# Basic Settings
 prefix: "&7[&6&l標籤&7&l系統&7]&f" # Message prefix
+language: "zh_TW" # Supported languages: zh_TW, en_US
+
+# Permission Settings
+permission:
+  admin: "koukeneko.admin" # Admin permission
+  tag_prefix: "koukeneko.tags." # Tag permission prefix
+
+# Menu Customization
+menu:
+  title: "&8Tag Selection" # Menu title
+  rows: "auto" # Menu rows (auto calculate or 1-6)
+  remove_item:
+    material: "BARRIER" # Remove button material
+    position: "bottom_right" # Button position
+  tag_item:
+    material: "NAME_TAG" # Tag item material
+
+# Command Configuration
+commands:
+  main:
+    name: "koukeneko"
+    aliases: ["kn"]
+    description: "KoukeNeko plugin main command"
+    usage: "/koukeneko reload"
+    permission: "koukeneko.admin"
+  tag:
+    name: "tag"
+    aliases: ["tags"]
+    description: "Tag system command"
+    usage: "/tag [arguments]"
 
 # Commands to execute when tags are selected/modified
 command: 
@@ -66,6 +104,18 @@ command:
   remove_permission_all: # When removing permission from all players
     - "lp group default permission unset {tag}"
     - "lp user * permission unset {tag}"
+
+# File Settings
+files:
+  tags_file: "tags.yml" # Tag file name
+  language_file_prefix: "lang_" # Language file prefix
+  language_file_suffix: ".yml" # Language file suffix
+
+# Debug Settings
+debug:
+  enabled: false # Debug mode toggle
+  log_commands: true # Log executed commands
+  log_permissions: false # Log permission checks
 ```
 
 ### tags.yml
@@ -116,6 +166,9 @@ tags:
 - The default configuration uses commands compatible with TAB plugin and LuckPerms, but you can modify these in config.yml
 - The tags.yml file contains default tags, which you can modify or add to as needed
 - When removing a tag, all online players will receive a notification if they had that tag
+- 🆕 **After updating, the plugin will automatically update your config.yml with new sections while preserving existing settings**
+- 🆕 **You can now customize menu appearance, command settings, and file locations**
+- 🆕 **Debug mode is available for troubleshooting - enable `debug.enabled` for detailed logs**
 
 ## 🤝 Contribution
 
@@ -140,6 +193,11 @@ KoukeNeko Nametag 是一個功能強大且使用者友好的 Minecraft 稱號/�
 - ✅ 與 LuckPerms 和 TAB 插件的無縫整合
 - ✅ 永久性標籤存儲和設定
 - ✅ 簡單的設定重載指令
+- 🆕 **高度可自訂的 config.yml 配置檔案**
+- 🆕 **靈活的選單設定（標題、大小、材質、位置）**
+- 🆕 **可配置的指令詳細設定（名稱、別名、描述）**
+- 🆕 **檔案管理選項和除錯設定**
+- 🆕 **多語言支援與可自訂語言檔案**
 
 ## 📂 安裝方式
 
@@ -171,8 +229,41 @@ KoukeNeko Nametag 是一個功能強大且使用者友好的 Minecraft 稱號/�
 
 ### config.yml
 
+config.yml 檔案已大幅擴展，新增了許多自訂選項：
+
 ```yaml
+# 基本設定
 prefix: "&7[&6&l標籤&7&l系統&7]&f" # 訊息前綴
+language: "zh_TW" # 支援的語言: zh_TW, en_US
+
+# 權限設定
+permission:
+  admin: "koukeneko.admin" # 管理員權限
+  tag_prefix: "koukeneko.tags." # 標籤權限前綴
+
+# 選單自訂設定
+menu:
+  title: "&8標籤選擇" # 選單標題
+  rows: "auto" # 選單行數 (auto 自動計算或 1-6)
+  remove_item:
+    material: "BARRIER" # 移除按鈕材質
+    position: "bottom_right" # 按鈕位置
+  tag_item:
+    material: "NAME_TAG" # 標籤物品材質
+
+# 指令設定
+commands:
+  main:
+    name: "koukeneko"
+    aliases: ["kn"]
+    description: "KoukeNeko 插件主指令"
+    usage: "/koukeneko reload"
+    permission: "koukeneko.admin"
+  tag:
+    name: "tag"
+    aliases: ["標籤", "tags"]
+    description: "標籤系統指令"
+    usage: "/tag [參數]"
 
 # 當選擇標籤後要執行的系統指令
 command: 
@@ -189,6 +280,18 @@ command:
   remove_permission_all: # 移除所有玩家的標籤權限
     - "lp group default permission unset {tag}" 
     - "lp user * permission unset {tag}"
+
+# 檔案設定
+files:
+  tags_file: "tags.yml" # 標籤檔案名稱
+  language_file_prefix: "lang_" # 語言檔案前綴
+  language_file_suffix: ".yml" # 語言檔案後綴
+
+# 除錯設定
+debug:
+  enabled: false # 除錯模式開關
+  log_commands: true # 記錄執行的指令
+  log_permissions: false # 記錄權限檢查
 ```
 
 ### tags.yml
@@ -239,6 +342,9 @@ tags:
 - 預設設定使用了與 TAB 插件和 LuckPerms 相容的指令，但您可以在 config.yml 中修改這些設定
 - tags.yml 文件包含預設標籤，您可以根據需要修改或新增新標籤
 - 刪除標籤時，所有擁有該標籤權限的在線玩家都會收到通知
+- 🆕 **更新後，插件會自動更新您的 config.yml 檔案，保留現有設定並新增新的區段**
+- 🆕 **現在您可以自訂選單外觀、指令設定和檔案位置**
+- 🆕 **提供除錯模式用於故障排除 - 啟用 `debug.enabled` 可獲得詳細日誌**
 
 ## 🤝 貢獻
 
@@ -247,6 +353,22 @@ tags:
 ## 📜 授權協議
 
 本插件基於 MIT 許可協議發布。
+
+---
+
+## 📝 Latest Updates
+
+### 🆕 Configuration File Overhaul
+This version brings a major update to the configuration system:
+- **Enhanced customization**: Detailed menu, permission, and command settings
+- **Multi-language support**: Improved language file management
+- **Debug options**: Better troubleshooting capabilities
+- **Flexible file management**: Customizable file names and paths
+
+For detailed information about the new configuration options, see:
+- [English Version Notes](VERSION_NOTES_EN.md)
+- [中文版本說明](VERSION_NOTES_ZH.md)
+- [Bilingual Version](VERSION_NOTES.md)
 
 ---
 
