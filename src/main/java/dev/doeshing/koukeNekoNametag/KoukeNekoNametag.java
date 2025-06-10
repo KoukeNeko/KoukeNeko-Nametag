@@ -42,7 +42,7 @@ public final class KoukeNekoNametag extends JavaPlugin {
             getLogger().info("KoukeNeko 標籤系統已啟用！");
         } catch (Exception e) {
             getLogger().severe("外掛啟動失敗: " + e.getMessage());
-            e.printStackTrace();
+            getLogger().log(java.util.logging.Level.SEVERE, "異常堆疊追蹤: ", e); // 更強健的日誌記錄方式
             // 停用外掛以防止不一致狀態
             getServer().getPluginManager().disablePlugin(this);
         }
@@ -92,7 +92,7 @@ public final class KoukeNekoNametag extends JavaPlugin {
             getLogger().info("KoukeNeko 標籤系統已停用！");
         } catch (Exception e) {
             getLogger().severe("外掛停用時發生錯誤: " + e.getMessage());
-            e.printStackTrace();
+            getLogger().log(java.util.logging.Level.SEVERE, "異常堆疊追蹤: ", e); // 更強健的日誌記錄方式
         }
     }
     
@@ -175,7 +175,7 @@ public final class KoukeNekoNametag extends JavaPlugin {
 
         } catch (Exception e) {
             getLogger().severe("重新載入設定檔時發生錯誤: " + e.getMessage());
-            e.printStackTrace();
+            getLogger().log(java.util.logging.Level.SEVERE, "異常堆疊追蹤: ", e); // 更強健的日誌記錄方式
         }
     }
     

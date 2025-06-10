@@ -75,8 +75,8 @@ public class CommandSystem {
             plugin.getLogger().info("已註冊指令: " + commandName);
 
         } catch (Exception e) {
-            plugin.getLogger().severe("註冊指令 " + commandName + " 時發生錯誤:");
-            e.printStackTrace();
+            plugin.getLogger().severe("註冊指令 " + commandName + " 時發生錯誤: " + e.getMessage());
+            plugin.getLogger().log(java.util.logging.Level.SEVERE, "異常堆疊追蹤: ", e); // 更強健的日誌記錄方式
         }
     }
 }

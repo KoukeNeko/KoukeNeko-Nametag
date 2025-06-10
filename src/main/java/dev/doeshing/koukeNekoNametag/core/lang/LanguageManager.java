@@ -48,7 +48,7 @@ public class LanguageManager {
                 }
             } catch (Exception e) {
                 plugin.getLogger().severe("無法儲存語言檔: " + e.getMessage());
-                e.printStackTrace();
+                plugin.getLogger().log(java.util.logging.Level.SEVERE, "異常堆疊追蹤: ", e); // 更強健的日誌記錄方式
             }
         }
         
@@ -89,7 +89,7 @@ public class LanguageManager {
                 plugin.getLogger().info("語言檔已更新: " + langFile.getName());
             } catch (IOException e) {
                 plugin.getLogger().severe("無法儲存更新的語言檔: " + e.getMessage());
-                e.printStackTrace();
+                plugin.getLogger().log(java.util.logging.Level.SEVERE, "IO異常堆疊追蹤: ", e); // 更強健的日誌記錄方式
             }
         }
     }
