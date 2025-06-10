@@ -2,6 +2,39 @@
 prefix: "&7[&6&l標籤&7&l系統&7]&f" # 訊息前綴
 language: "zh_TW" # 支援的語言: zh_TW, en_US
 
+# 權限設定
+permission:
+  admin: "koukeneko.admin" # 管理員權限
+  tag_prefix: "koukeneko.tags." # 標籤權限前綴
+
+# 標籤選單設定
+menu:
+  title: "&8標籤選擇" # 選單標題
+  rows: "auto" # 選單行數 (auto 為自動計算，或設定固定數字 1-6)
+  remove_item:
+    material: "BARRIER" # 移除標籤按鈕的材質
+    position: "bottom_right" # 位置: bottom_right, bottom_left, bottom_center, 或數字 (0-53)
+  tag_item:
+    material: "NAME_TAG" # 標籤物品的材質
+
+# 指令設定
+commands:
+  # 主指令設定
+  main:
+    name: "koukeneko"
+    aliases: ["kn"]
+    description: "KoukeNeko 插件主指令"
+    usage: "/koukeneko reload"
+    permission: "koukeneko.admin"
+  
+  # 標籤指令設定
+  tag:
+    name: "tag"
+    aliases: ["標籤", "tags"]
+    description: "標籤系統指令"
+    usage: "/tag [參數]"
+    permission: null # null 表示不需要權限，具體權限檢查在指令處理中
+
 # 當選擇標籤後要執行的系統指令
 command: 
   settag: # 設定標籤
@@ -17,3 +50,15 @@ command:
   remove_permission_all: # 移除所有玩家的標籤權限
     - "lp group default permission unset {tag}" # 移除預設組的權限
     - "lp user * permission unset {tag}" # 移除所有使用者的權限
+
+# 檔案設定
+files:
+  tags_file: "tags.yml" # 標籤設定檔案名稱
+  language_file_prefix: "lang_" # 語言檔案前綴
+  language_file_suffix: ".yml" # 語言檔案後綴
+
+# 除錯設定
+debug:
+  enabled: false # 是否啟用除錯模式
+  log_commands: true # 是否記錄執行的指令
+  log_permissions: false # 是否記錄權限檢查
