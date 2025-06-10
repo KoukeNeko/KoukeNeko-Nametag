@@ -1,154 +1,96 @@
 package dev.doeshing.koukeNekoNametag.core.tag;
 
 import dev.doeshing.koukeNekoNametag.KoukeNekoNametag;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
- * 管理所有標籤
+ * 標籤管理服務
+ * 
+ * 遵循SOLID原則重構：
+ * - SRP (單一責任原則): 專門負責標籤業務邏輯協調，不直接處理資料存取或權限操作
+ * - DIP (依賴反轉原則): 依賴抽象介面而非具體實作
+ * - OCP (開放封閉原則): 透過依賴注入支援不同實作方式
+ * - LSP (里氏替換原則): 可以替換不同的服務實作而不影響行為
+ * - ISP (介面隔離原則): 依賴專門的服務介面而非龐大的介面
  */
 public class TagManager {
     private final KoukeNekoNametag plugin;
-    private final Map<String, Tag> tags; // 標籤ID到標籤對象的映射
-    private File tagsFile;
-    private FileConfiguration tagsConfig;
+    private final TagRepository tagRepository;          // DIP: 依賴抽象而非具體實作
+    private final TagPermissionService permissionService; // SRP: 分離權限管理責任
+    private final TagDisplayService displayService;      // SRP: 分離顯示邏輯責任
 
-    public TagManager(KoukeNekoNametag plugin) {
+    /**
+     * 建立標籤管理器
+     * 
+     * DIP原則: 透過建構子注入依賴，而非直接建立具體實作
+     */
+    public TagManager(KoukeNekoNametag plugin, 
+                     TagRepository tagRepository,
+                     TagPermissionService permissionService,
+                     TagDisplayService displayService) {
         this.plugin = plugin;
-        this.tags = new HashMap<>();
-        loadTagsConfig();
+        this.tagRepository = tagRepository;      // DIP: 注入抽象依賴
+        this.permissionService = permissionService; // SRP: 分離職責
+        this.displayService = displayService;    // SRP: 分離職責
     }
 
     /**
-     * 加載標籤設定
-     */
-    public void loadTagsConfig() {
-        tagsFile = new File(plugin.getDataFolder(), "tags.yml");
-        if (!tagsFile.exists()) {
-            plugin.saveResource("tags.yml", false);
-        }
-        tagsConfig = YamlConfiguration.loadConfiguration(tagsFile);
-        loadTags();
-    }
-
-    /**
-     * 從設定中加載所有標籤
-     */
-    private void loadTags() {
-        tags.clear();
-        ConfigurationSection tagsSection = tagsConfig.getConfigurationSection("tags");
-        if (tagsSection == null) {
-            plugin.getLogger().warning("No tags section found in tags.yml!");
-            return;
-        }
-
-        for (String tagId : tagsSection.getKeys(false)) {
-            String display = tagsSection.getString(tagId + ".display", "&7[" + tagId + "]&f");
-            
-            Tag tag = new Tag(tagId, display);
-            tags.put(tagId, tag);
-            plugin.getLogger().info("Loaded tag: " + tagId + " with display: " + display);
-        }
-    }
-
-    /**
-     * 儲存標籤設定
-     */
-    public void saveTags() {
-        // 儲存標籤數據
-        for (Map.Entry<String, Tag> entry : tags.entrySet()) {
-            String tagId = entry.getKey();
-            Tag tag = entry.getValue();
-            
-            tagsConfig.set("tags." + tagId + ".display", tag.getDisplay());
-        }
-        
-        try {
-            tagsConfig.save(tagsFile);
-        } catch (IOException e) {
-            plugin.getLogger().severe("Failed to save tags.yml: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 重新加載標籤設定
+     * 重新載入標籤設定
+     * SRP: 委派給專門的儲存庫處理
      */
     public void reload() {
-        loadTagsConfig();
+        tagRepository.reload();
     }
 
     /**
      * 獲取所有標籤
+     * SRP: 委派給儲存庫處理資料存取
      */
     public Collection<Tag> getAllTags() {
-        return tags.values();
+        return tagRepository.loadAllTags();
     }
 
     /**
      * 根據ID獲取標籤
+     * SRP: 委派給儲存庫處理資料存取
      */
     public Tag getTag(String id) {
-        return tags.get(id);
+        return tagRepository.findById(id).orElse(null);
     }
 
     /**
      * 建立新標籤
+     * SRP: 委派給儲存庫處理資料持久化
      */
     public Tag createTag(String id, String display) {
-        Tag tag = new Tag(id, display);
-        tags.put(id, tag);
+        String permissionPrefix = plugin.getConfig().getString("permission.tag_prefix", "koukeneko.tags.");
+        Tag tag = new Tag(id, display, permissionPrefix);
         
-        // 儲存到設定
-        tagsConfig.set("tags." + id + ".display", display);
-        
-        try {
-            tagsConfig.save(tagsFile);
-        } catch (IOException e) {
-            plugin.getLogger().severe("Failed to save tags.yml: " + e.getMessage());
-            e.printStackTrace();
+        if (tagRepository.save(tag)) {
+            return tag;
         }
-        
-        return tag;
+        return null;
     }
 
     /**
      * 刪除標籤
+     * SRP: 委派給儲存庫處理資料刪除
      */
     public boolean deleteTag(String id) {
-        if (!tags.containsKey(id)) {
-            return false;
-        }
-        
-        tags.remove(id);
-        tagsConfig.set("tags." + id, null);
-        
-        try {
-            tagsConfig.save(tagsFile);
-            return true;
-        } catch (IOException e) {
-            plugin.getLogger().severe("Failed to save tags.yml: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
+        return tagRepository.delete(id);
     }
 
     /**
      * 獲取玩家可用的所有標籤
+     * SRP: 委派給權限服務檢查權限
      */
     public List<Tag> getAvailableTags(Player player) {
         List<Tag> availableTags = new ArrayList<>();
         
-        for (Tag tag : tags.values()) {
-            // 檢查是否有相關權限
-            if (player.hasPermission(tag.getPermission())) {
+        for (Tag tag : getAllTags()) {
+            if (permissionService.hasPermission(player, tag)) {
                 availableTags.add(tag);
             }
         }
@@ -158,84 +100,46 @@ public class TagManager {
 
     /**
      * 設定玩家的啟用標籤
+     * SRP: 分離權限檢查和標籤設定責任
      */
     public boolean setActiveTag(Player player, Tag tag) {
         if (tag == null) {
             return false;
         }
         
-        // 檢查玩家是否有權限使用此標籤
-        if (!player.hasPermission(tag.getPermission())) {
+        // SRP: 委派給權限服務檢查權限
+        if (!permissionService.hasPermission(player, tag)) {
             return false;
         }
         
         // 先移除現有標籤
-        removeActiveTag(player);
+        displayService.removeActiveTag(player);
         
-        // 執行設定標籤的指令
-        List<String> commands = plugin.getConfig().getStringList("command.settag");
-        for (String cmd : commands) {
-            cmd = cmd.replace("{player}", player.getName())
-                    .replace("{tag}", tag.getDisplay());
-            plugin.getLogger().info("執行指令: " + cmd);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-        }
-        
-        return true;
+        // SRP: 委派給顯示服務處理標籤設定
+        return displayService.setActiveTag(player, tag);
     }
 
     /**
      * 移除玩家的啟用標籤
+     * SRP: 委派給顯示服務處理
      */
     public boolean removeActiveTag(Player player) {
-        // 執行移除標籤的指令
-        List<String> commands = plugin.getConfig().getStringList("command.remove");
-        for (String cmd : commands) {
-            cmd = cmd.replace("{player}", player.getName());
-            plugin.getLogger().info("執行指令: " + cmd);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-        }
-        
-        return true;
+        return displayService.removeActiveTag(player);
     }
 
     /**
      * 給予玩家標籤權限
+     * SRP: 委派給權限服務處理
      */
     public boolean giveTagPermission(Player player, Tag tag) {
-        if (tag == null) {
-            return false;
-        }
-        
-        // 執行新增權限的指令
-        List<String> commands = plugin.getConfig().getStringList("command.add_permission");
-        for (String cmd : commands) {
-            cmd = cmd.replace("{player}", player.getName())
-                    .replace("{tag}", tag.getPermission());
-            plugin.getLogger().info("執行指令: " + cmd);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-        }
-        
-        return true;
+        return permissionService.givePermission(player, tag);
     }
 
     /**
      * 移除玩家標籤權限
+     * SRP: 委派給權限服務處理
      */
     public boolean removeTagPermission(Player player, Tag tag) {
-        if (tag == null) {
-            return false;
-        }
-        
-        // 執行移除權限的指令
-        List<String> commands = plugin.getConfig().getStringList("command.remove_permission");
-        for (String cmd : commands) {
-            cmd = cmd.replace("{player}", player.getName())
-                    .replace("{tag}", tag.getPermission());
-            plugin.getLogger().info("執行指令: " + cmd);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-        }
-        
-        return true;
+        return permissionService.removePermission(player, tag);
     }
 }
